@@ -1,3 +1,8 @@
+#include <vector>
+#include "Letter.h"
+#include "Block.hpp"
+
+
 class Brain
 {
 private:
@@ -6,6 +11,8 @@ private:
     const std::string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 `~!@#$%^&*()-_=+\\|[]{};':\",./<>?";
     bool isEnglish = true;
     ushort letterMap[128] = {0};
+
+    std::vector<Block<Letter>> letterBlocks;
 
 public:
     Brain();
