@@ -1,7 +1,3 @@
-// #include <vector>
-// #include "Letter.h"
-// #include "Block.hpp"
-
 class Brain
 {
 private:

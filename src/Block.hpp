@@ -1,6 +1,3 @@
-// #include <algorithm> // needed for std::find
-// #include <vector>
-
 template <typename T>
 class Block
 {
@@ -34,20 +31,9 @@ class Block
     }
 
 public:
-    // Block() : id(ID_COUNTER++),
-    //           previous(new std::vector<Connection *>()),
-    //           value(new T()),
-    //           next(new std::vector<Connection *>())
-    // {
-    //     std::cout << "from non-parameterized Block constructor" << std::endl;
-    // }
-
     Block(const T &_value) : id(ID_COUNTER++),
-                             //  inward(new std::vector<Connection *>()),
-                             value(new T(_value)) //,
-                                                  //  outward(new std::vector<Connection *>())
+                             value(new T(_value))
     {
-        // std::cout << "from parameterized Block constructor" << std::endl;
         inward = new std::vector<Connection *>();
         outward = new std::vector<Connection *>();
     }
@@ -56,11 +42,6 @@ public:
     {
         return (other.id == id);
     }
-
-    // bool operator==(const T &other) const
-    // {
-    //     return ((*value) == other);
-    // }
 
     ~Block()
     {
@@ -105,11 +86,6 @@ public:
         delete outward;
         outward = NULL;
     }
-
-    // void setValue(const T& node) const
-    // {
-    //     // current->setValue(node);
-    // }
 
     const bool isValueEquals(const T &node) const
     {

@@ -1,5 +1,3 @@
-#include <string>
-
 class Word
 {
     std::string str;

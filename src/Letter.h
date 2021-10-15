@@ -1,8 +1,4 @@
-// class Letter;
-// #include "Word.h"
-//#include "Node.h"
-
-class Letter //: public Node<int>
+class Letter
 {
     char c;
 
