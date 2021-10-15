@@ -1,7 +1,8 @@
 #include <iostream>
-// #include <string.h>
-// #include <vector>
 #include <algorithm>
+#include <vector>
+#include "Letter.h"
+#include "Block.hpp"
 
 #include "Brain.h"
 
@@ -20,6 +21,11 @@ Brain::Brain()
 
 Brain::~Brain()
 {
+    for (std::vector<Block<Letter> *>::iterator it = letterBlocks.begin(); it != letterBlocks.end();)
+    {
+        delete (*it);
+        it = letterBlocks.erase(it);
+    }
 }
 
 void Brain::getUserInput()
@@ -33,13 +39,22 @@ void Brain::getUserInput()
     {
         char c = inputStr[i];
         Letter l(c);
-        std::vector<Block<Letter>>::iterator it = std::find(letterBlocks.begin(), letterBlocks.end(), l);
-        if(it == letterBlocks.end()) {
-            Block<Letter> b(l);
+        std::vector<Block<Letter> *>::iterator it;
+        for (it = letterBlocks.begin(); it != letterBlocks.end(); it++)
+        {
+            if ((*it)->isValueEquals(l))
+            {
+                std::cout << "letter block for '" << c << "' already present, skipping insert" << std::endl;
+                (*it)->updateConnection(l);
+
+                break;
+            }
+        }
+        if (it == letterBlocks.end())
+        {
+            Block<Letter> *b = new Block<Letter>(l);
             letterBlocks.push_back(b);
             std::cout << "inserted letter block for '" << c << "'" << std::endl;
-        } else {
-            std::cout << "letter block for '" << c << "' already present, skipping insert" << std::endl;
         }
     }
 }

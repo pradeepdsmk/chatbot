@@ -1,7 +1,6 @@
-#include <vector>
-#include "Letter.h"
-#include "Block.hpp"
-
+// #include <vector>
+// #include "Letter.h"
+// #include "Block.hpp"
 
 class Brain
 {
@@ -12,7 +11,7 @@ private:
     bool isEnglish = true;
     ushort letterMap[128] = {0};
 
-    std::vector<Block<Letter>> letterBlocks;
+    std::vector<Block<Letter> *> letterBlocks;
 
 public:
     Brain();

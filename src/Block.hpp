@@ -1,68 +1,135 @@
+// #include <algorithm> // needed for std::find
+// #include <vector>
+
 template <typename T>
 class Block
 {
     struct Connection
     {
-        T *node;
-        unsigned int count;
-
-        Connection()
-        {
-            node = new T();
-            count = 0;
-        }
-
-        ~Connection()
-        {
-            delete node;
-        }
+        unsigned int count = 0;
+        /** 
+         * node never holds new pointers,  
+         * only points to existing blocks. so no new and delete 
+        */
+        Block *from;
+        Block *to;
     };
 
-    const std::vector<Connection *> *previous;
-    const T *current;
-    const std::vector<Connection *> *next;
+    std::vector<Connection *> *inward;
+    const T *value;
+    std::vector<Connection *> *outward;
     const unsigned int id;
 
     static unsigned int ID_COUNTER;
 
+    const bool forgetConnection(std::vector<Block<T>::Connection *> *vec, const Block<T>::Connection *c)
+    {
+        auto it = std::find(vec->begin(), vec->end(), c);
+        if (it != vec->end())
+        {
+            vec->erase(it);
+            return true;
+        }
+        return false;
+    }
+
 public:
-    Block() : id(ID_COUNTER++),
-              previous(new std::vector<Connection *>()),
-              current(new T()),
-              next(new std::vector<Connection *>())
+    // Block() : id(ID_COUNTER++),
+    //           previous(new std::vector<Connection *>()),
+    //           value(new T()),
+    //           next(new std::vector<Connection *>())
+    // {
+    //     std::cout << "from non-parameterized Block constructor" << std::endl;
+    // }
+
+    Block(const T &_value) : id(ID_COUNTER++),
+                             //  inward(new std::vector<Connection *>()),
+                             value(new T(_value)) //,
+                                                  //  outward(new std::vector<Connection *>())
     {
+        // std::cout << "from parameterized Block constructor" << std::endl;
+        inward = new std::vector<Connection *>();
+        outward = new std::vector<Connection *>();
     }
 
-    Block(const T& node) : id(ID_COUNTER++),
-              previous(new std::vector<Connection *>()),
-              current(new T(node)),
-              next(new std::vector<Connection *>())
-    {
-       
-    }
-
-    bool operator==(const Block<T> &other) const
+    const bool operator==(const Block<T> &other) const
     {
         return (other.id == id);
     }
 
-    bool operator==(const T &other) const
-    {
-        return ((*current) == other);
-    }
+    // bool operator==(const T &other) const
+    // {
+    //     return ((*value) == other);
+    // }
 
     ~Block()
     {
-        delete previous;
-        delete current;
-        delete next;
+
+        for (auto iti = inward->begin(); iti != inward->end(); iti++)
+        {
+            Connection *c = (*iti);
+            if (c->from != NULL)
+            {
+                c->from->forgetOutwardConnection(c);
+                c->from = NULL;
+            }
+            c->to = NULL; // actually, to is ourselves (this Block)
+
+            delete (*iti);
+            // iti = inward.erase(iti);
+            iti++;
+        }
+
+        inward->clear();
+        delete inward;
+        inward = NULL;
+
+        delete value;
+        value = NULL;
+
+        for (auto ito = outward->begin(); ito != outward->end(); ito++)
+        {
+            Connection *c = (*ito);
+            if (c->to != NULL)
+            {
+                c->to->forgetInwardConnection(c);
+                c->to = NULL;
+            }
+            c->from = NULL; // actually, from is ourselves (this Block)
+
+            delete (*ito);
+            // ito = outward.erase(ito);
+        }
+
+        outward->clear();
+        delete outward;
+        outward = NULL;
     }
 
-    void setValue(const T& node) const
+    // void setValue(const T& node) const
+    // {
+    //     // current->setValue(node);
+    // }
+
+    const bool isValueEquals(const T &node) const
     {
-        // current->setValue(node);
+        return (*value == node);
     }
 
+    void updateConnection(const T &node)
+    {
+        std::cout << "Block: Updated connection" << std::endl;
+    }
+
+    const bool forgetOutwardConnection(const Connection *c)
+    {
+        return forgetConnection(outward, c);
+    }
+
+    const bool forgetInwardConnection(const Connection *c)
+    {
+        return forgetConnection(inward, c);
+    }
 };
 
 template <typename T>

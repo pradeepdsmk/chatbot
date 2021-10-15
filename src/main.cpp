@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+
+#include "Letter.h"
+#include "Block.hpp"
 #include "Brain.h"
 
 int main()
