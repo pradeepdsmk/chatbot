@@ -1,8 +1,5 @@
 #include <iostream>
-#include <vector>
 
-#include "Letter.h"
-#include "Block.hpp"
 #include "Brain.h"
 
 int main()
@@ -12,7 +9,9 @@ int main()
     Brain b;
     while (1)
     {
-        b.getUserInput();
+        if(!b.getUserInput()) {
+            break;
+        }
         b.updateNeurons();
         b.showMap();
     }
